@@ -4,6 +4,8 @@
 
 main.c
 
+MCAL\Interrupt\INTERRUPT.c
+
 MCAL\SPI\SPI.c
 
 MCAL\SPI\SPI_CONF.c

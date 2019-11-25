@@ -33,14 +33,31 @@ LINKER_SCRIPT_DEP:=
 
 # Every subdirectory with source files must be described here
 SUBDIRS :=  \
+../HAL/EEPROM \
+../HAL/KEYPAD \
+../HAL/LED \
+../HAL/LCD \
+../HAL/BLUETOOTH \
+../HAL/MOTIONDETECTOR \
+../HAL/LIGHTSENSOR \
+../HAL/MOTOR \
+../HAL/SERVO \
+../HAL/TEMP72 \
 ../MCAL \
 ../libraries_ \
-../MCAL/SPI
+../MCAL/Interrupt \
+../MCAL/GPIO \
+../MCAL/ADC \
+../MCAL/I2C \
+../MCAL/UART \
+../MCAL/SPI \
+../HAL
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../main.c \
+../MCAL/Interrupt/INTERRUPT.c \
 ../MCAL/SPI/SPI.c \
 ../MCAL/SPI/SPI_CONF.c
 
@@ -53,21 +70,25 @@ ASM_SRCS +=
 
 OBJS +=  \
 main.o \
+MCAL/Interrupt/INTERRUPT.o \
 MCAL/SPI/SPI.o \
 MCAL/SPI/SPI_CONF.o
 
 OBJS_AS_ARGS +=  \
 main.o \
+MCAL/Interrupt/INTERRUPT.o \
 MCAL/SPI/SPI.o \
 MCAL/SPI/SPI_CONF.o
 
 C_DEPS +=  \
 main.d \
+MCAL/Interrupt/INTERRUPT.d \
 MCAL/SPI/SPI.d \
 MCAL/SPI/SPI_CONF.d
 
 C_DEPS_AS_ARGS +=  \
 main.d \
+MCAL/Interrupt/INTERRUPT.d \
 MCAL/SPI/SPI.d \
 MCAL/SPI/SPI_CONF.d
 
@@ -88,21 +109,28 @@ LINKER_SCRIPT_DEP+=
 ./main.o: .././main.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../MCAL" -I"../libraries_" -I"../MCAL/SPI"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega32a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../MCAL" -I"../libraries_" -I"../MCAL/SPI" -I"../MCAL/Interrupt" -I"../MCAL/ADC" -I"../MCAL/GPIO" -I"../MCAL/I2C" -I"../MCAL/UART" -I"../HAL" -I"../HAL/BLUETOOTH" -I"../HAL/EEPROM" -I"../HAL/KEYPAD" -I"../HAL/LCD" -I"../HAL/LED" -I"../HAL/LIGHTSENSOR" -I"../HAL/MOTIONDETECTOR" -I"../HAL/MOTOR" -I"../HAL/SERVO" -I"../HAL/TEMP72"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega32a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+MCAL/Interrupt/INTERRUPT.o: ../MCAL/Interrupt/INTERRUPT.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../MCAL" -I"../libraries_" -I"../MCAL/SPI" -I"../MCAL/Interrupt" -I"../MCAL/ADC" -I"../MCAL/GPIO" -I"../MCAL/I2C" -I"../MCAL/UART" -I"../HAL" -I"../HAL/BLUETOOTH" -I"../HAL/EEPROM" -I"../HAL/KEYPAD" -I"../HAL/LCD" -I"../HAL/LED" -I"../HAL/LIGHTSENSOR" -I"../HAL/MOTIONDETECTOR" -I"../HAL/MOTOR" -I"../HAL/SERVO" -I"../HAL/TEMP72"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega32a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 MCAL/SPI/SPI.o: ../MCAL/SPI/SPI.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../MCAL" -I"../libraries_" -I"../MCAL/SPI"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega32a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../MCAL" -I"../libraries_" -I"../MCAL/SPI" -I"../MCAL/Interrupt" -I"../MCAL/ADC" -I"../MCAL/GPIO" -I"../MCAL/I2C" -I"../MCAL/UART" -I"../HAL" -I"../HAL/BLUETOOTH" -I"../HAL/EEPROM" -I"../HAL/KEYPAD" -I"../HAL/LCD" -I"../HAL/LED" -I"../HAL/LIGHTSENSOR" -I"../HAL/MOTIONDETECTOR" -I"../HAL/MOTOR" -I"../HAL/SERVO" -I"../HAL/TEMP72"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega32a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 MCAL/SPI/SPI_CONF.o: ../MCAL/SPI/SPI_CONF.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../MCAL" -I"../libraries_" -I"../MCAL/SPI"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega32a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\include" -I"../MCAL" -I"../libraries_" -I"../MCAL/SPI" -I"../MCAL/Interrupt" -I"../MCAL/ADC" -I"../MCAL/GPIO" -I"../MCAL/I2C" -I"../MCAL/UART" -I"../HAL" -I"../HAL/BLUETOOTH" -I"../HAL/EEPROM" -I"../HAL/KEYPAD" -I"../HAL/LCD" -I"../HAL/LED" -I"../HAL/LIGHTSENSOR" -I"../HAL/MOTIONDETECTOR" -I"../HAL/MOTOR" -I"../HAL/SERVO" -I"../HAL/TEMP72"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega32a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 

@@ -47,7 +47,10 @@
 #define UDR     *((volatile u8 * const)0x2C)
 #define UCSRA   *((volatile u8 * const)0x2B)
 #define UCSRB   *((volatile u8 * const)0x2A)
+#define UCSRC   *((volatile u8 * const)0x40)
 #define UBRRL   *((volatile u8 * const)0x29)
+#define UBRRH   *((volatile u8 * const)0x40)
+
 
 //*****************************************************************************
 //
@@ -92,6 +95,41 @@
 #define ADCSRA *((volatile u8 * const)0x26)
 #define ADCH   *((volatile u8 * const)0x25)
 #define ADCL   *((volatile u8 * const)0x24)
+
+
+
+#define ADC_EN        1 << 7
+#define AD_START      1 << 6
+#define AD_AUTTRIG    1 << 5
+#define AD_INTFLAG    1 << 4
+#define AD_INTEN      1 << 3
+
+#define ADPRE_2       0x01
+#define ADPRE_4       0x02
+#define ADPRE_8       0x03
+#define ADPRE_16      0x04
+#define ADPRE_32      0x05
+#define ADPRE_64      0x06
+#define ADPRE_128     0x07
+
+#define CH0  0x00
+#define CH1  0x01
+#define CH2  0x02
+#define CH3  0x03
+#define CH4  0x04
+#define CH5  0x05
+#define CH6  0x06
+#define CH7  0x07
+
+#define AREF_EN 0b11 << 6
+#define AVCC_EN 0x40
+#define INT_VOL 0xD0
+
+#define LEFT_ADJ  1 << 5
+
+#define FREERUN  0x00
+#define AN_COMP  0x20
+#define EXT_INT  0x40
 
 //*****************************************************************************
 //
@@ -145,6 +183,10 @@
 #define TCCR2  *((volatile u8 * const)0x45)
 #define TCNT2  *((volatile u8 * const)0x44)
 #define OCR2   *((volatile u8 * const)0x43)
+
+
+//*******************************************************
+
 
 //*****************************************************************************
 //

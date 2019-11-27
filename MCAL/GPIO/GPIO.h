@@ -1,37 +1,40 @@
+#ifndef GPIO_H
+#define GPIO_H
 
-/*
- * Demery_GPIO.h
- *
- * Created: 8/9/2018 2:25:46 PM
- *  Author: MOHAMMED-PC
- */ 
+#include "Typedefs.h"
+#include "GPIO_Cfg.h"
 
-
-#ifndef GPIO_H_
-#define GPIO_H_
-
-#include <stdint.h>
-
-#define INPUT 0
+#define INPUT  0
 #define OUTPUT 1
 
 #define HIGH 0xff
-#define LOW 0x00
+#define LOW  0x00
 
 #define A 0
 #define B 1
 #define C 2
 #define D 3
 
-#define PULLUP_ON 0
+#define PULLUP_ON  0
 #define PULLUP_OFF 1
 
-//void GPIO_DIR(uint8_t PortId, uint8_t pin, uint8_t dir)
-void GPIO_DIR(uint8_t PortId, uint8_t pin, uint8_t dir,uint8_t pullup);
-void GPIO_Write(uint8_t PortId, uint8_t pin, uint8_t data);
-void GPIO_Port_Write(uint8_t PortId, uint8_t data);
-void GPIO_Read(uint8_t PortId, uint8_t pin, uint8_t *dataptr);
+#define DIGITAL 0
+#define ANALOG  1
 
+typedef struct
+{
+	u8 PortID;
+	u8 Pin;
+	u8 PinMode;
+	u8 PullupON_OFF;
+	u8 D_A;
+	
+}GPIO_CfgType;
 
+extern const GPIO_CfgType GPIO_ConfigParam [GPIO_GP_NUM];
 
-#endif /* DEMERY_GPIO_H_ */
+void GPIO_Init(void);
+void GPIO_Write(u8 GroupId,u8 GroupData);
+void GPIO_Read(u8 GroupId,u8* GroupDataPtr);
+
+#endif

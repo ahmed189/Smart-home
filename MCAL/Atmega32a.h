@@ -198,4 +198,7 @@
 #define SREG	*((volatile u8 * const)0x5F)
 #define MCUCR	*((volatile u8 * const)0x55)
 #define MCUCSR  *((volatile u8 * const)0x54)
+
+//SPECIAL FUNCTION REGISTER
+#define SFIOR   *((volatile u8 * const)0x50)
 #endif /* ATMEGA32A_H_ */

@@ -1,31 +1,21 @@
-/*
- * GPIO.c
- *
- * Created: 8/9/2018 2:25:25 PM
- *  Author: MOHAMMED-PC
- */
-
+#include "Typedefs.h"
+#include "Atmega32a.h"
 #include "GPIO.h"
-#include <stdint.h>
+#include "GPIO_Cfg.h"
 
-typedef volatile uint8_t* const GPIO_Type; //tyoe of pointer to the registers' addresses
- 
+typedef volatile u8* const GPIO_Type; //type of pointer to the registers' addresses
+
 #define PORTS_NUMBER 4u
 #define PINS_NUMBER  8u
 
 /*Ports Base Addresses */
-#define PORTA_BASE_ADDRESS 0x3B
-#define PORTB_BASE_ADDRESS 0x38
-#define PORTC_BASE_ADDRESS 0x35
-#define PORTD_BASE_ADDRESS 0x32
 
-#define SPECIAL_FUN_REG 0x50
-
-static const uint8_t PortsBaseAddressLut[PORTS_NUMBER] =
-{       PORTA_BASE_ADDRESS,
-	PORTB_BASE_ADDRESS,
-	PORTC_BASE_ADDRESS,
-	PORTD_BASE_ADDRESS,
+static const uint32_t PortsBaseAddressLut[PORTS_NUMBER] =
+{
+ PORTA,
+ PORTB,
+ PORTC,
+ PORTD,
 };
 
 /*macros for accessing registers with defined offsets*/
@@ -35,84 +25,109 @@ static const uint8_t PortsBaseAddressLut[PORTS_NUMBER] =
 #define GPIO_WRITE(PORT_ID)  *((GPIO_Type)(GPIO_REG_ADDRESS(PORT_ID,0x00)))
 #define GPIO_READ(PORT_ID)   *((GPIO_Type)(GPIO_REG_ADDRESS(PORT_ID,0x02)))
 #define GPIO_DDR(PORT_ID)    *((GPIO_Type)(GPIO_REG_ADDRESS(PORT_ID,0x01)))
-#define SPECFUN_REG          *((GPIO_Type)(SPECIAL_FUN_REG))
+#define SPECFUN_REG          *((GPIO_Type)(SFIOR))
 
-/*a function that controls the pin direction, which takes 4 parameters:
-PortID, Pin Number, Direction, Enabling/Disabling Pull-up resistor */
+static uint8_t GPIO_GP_State[GPIO_GP_NUM] = {0};
 
-void GPIO_DIR(uint8_t PortId, uint8_t pin, uint8_t dir,uint8_t pullup)
+/*A function to initialize all the GPIO Groups in the configurations*/
+void GPIO_Init(void)
 {
-	if((PortId < PORTS_NUMBER) && (pin < PINS_NUMBER))
-	{
-		if (dir == INPUT)
-		{
-			GPIO_DDR(PortId) &= ~((1 << pin) & 0xff);
+	u8 LoopIndex;
+	u8 ErrorFlag = 0;
+	const GPIO_CfgType *CfgPtr;
 
-			if (pullup == PULLUP_ON)
+	for(LoopIndex = 0; (LoopIndex <GPIO_GP_NUM) && (ErrorFlag == 0); LoopIndex++)
+	{
+		if((GPIO_ConfigParam[LoopIndex].PortID < PORTS_NUMBER) && (GPIO_ConfigParam[LoopIndex].Pin < PINS_NUMBER))
+		{
+			CfgPtr = &GPIO_ConfigParam[LoopIndex];
+			/*Unlock the group*/
+	
+			if (CfgPtr->PinMode == INPUT)
 			{
-				GPIO_WRITE(PortId) |= ((1 << pin) & 0xff);
-				SPECFUN_REG &= ~(1 << 2);
+				GPIO_DDR(CfgPtr->PortID) &= ~((1 << CfgPtr->Pin) & 0xff);
+
+				if (CfgPtr->PullupON_OFF == PULLUP_ON)
+				{
+					GPIO_WRITE(CfgPtr->PortID) |= ((1 << CfgPtr->Pin) & 0xff);
+					SPECFUN_REG &= ~(1 << 2);
+				}
+
+				if (CfgPtr->PullupON_OFF == PULLUP_OFF)
+				{
+					GPIO_WRITE(CfgPtr->PortID) &= ~((1 << CfgPtr->Pin) & 0xff);
+					SPECFUN_REG |= (1 << 2);
+				}
+
+			}
+			if (CfgPtr->PinMode == OUTPUT)
+			{
+				GPIO_DDR(CfgPtr->PortID) |= ((1 << CfgPtr->Pin) & 0xff);
+			}
+			
+			GPIO_GP_State[LoopIndex] = 1;
+		}
+		else
+		{
+			ErrorFlag = 1;
+		}
+	}
+}
+
+/*A function to Digital Write data to a specific group*/
+void GPIO_Write(u8 GroupId,u8 GroupData)
+{
+	const GPIO_CfgType *CfgWrite;
+
+	if (( GroupId < GPIO_GP_NUM))
+	{
+		CfgWrite = &GPIO_ConfigParam[GroupId];
+		
+		if ((CfgWrite->PinMode == OUTPUT) && (GPIO_GP_State[GroupId] == 1))
+		{
+			if (GroupData == LOW)
+			{
+				GPIO_WRITE(CfgWrite->PortID) &= ~((1 << CfgWrite->Pin) & 0xff);
+			}
+			if (GroupData == HIGH)
+			{
+				GPIO_WRITE(CfgWrite->PortID) |= ((1 << CfgWrite->Pin) & 0xff);
+			}
+	    }
+
+	}
+}
+
+
+
+
+/*A function to Digital read data from a specific group*/
+void GPIO_Read(u8 GroupId,u8* GroupDataPtr)
+{
+	const GPIO_CfgType * CfgRead;
+	if (( GroupId < GPIO_GP_NUM))
+	{
+
+		CfgRead =  &GPIO_ConfigParam[GroupId];
+
+		if((CfgRead->PinMode == INPUT) && (GPIO_GP_State[GroupId] == 1))
+		{
+
+			*GroupDataPtr = (GPIO_READ(CfgRead->PortID) & (1 << CfgRead->Pin));
+			if ((*GroupDataPtr & 0xff) == (1 << CfgRead->Pin))
+			{
+				*GroupDataPtr = 0xff;
+			}
+			if ((*GroupDataPtr & 0xff) != (1 << CfgRead->Pin))
+			{
+				*GroupDataPtr = 0x00;
 			}
 
-			if (pullup == PULLUP_OFF)
-			{
-				GPIO_WRITE(PortId) &= ~((1 << pin) & 0xff);
-				SPECFUN_REG |= (1 << 2);
-			}
-
-		}
-		if (dir == OUTPUT)
-		{
-			GPIO_DDR(PortId) |= ((1 << pin) & 0xff);
-		}
-	}
-}
-
-/*a function that writes data on the selected port, which takes 3 parameters:
-PortID, Pin Number, Data will be written either HIGH or LOW */
-
-void GPIO_Write(uint8_t PortId, uint8_t pin, uint8_t data)
-{
-	if((PortId < PORTS_NUMBER) && (pin < PINS_NUMBER))
-	{
-		if (data == LOW)
-		{
-			GPIO_WRITE(PortId) &= ~((1 << pin) & 0xff);
-		}
-		if (data == HIGH)
-		{
-			GPIO_WRITE(PortId) |= ((1 << pin) & 0xff);
-		}
-	}
-}
-
-void GPIO_Port_Write(uint8_t PortId, uint8_t data)
-{
-	if((PortId < PORTS_NUMBER))
-	{
-		GPIO_WRITE(PortId) = data;
-		
-	}
-}
-
-
-/*a function that reads data from the selected port, which takes 3 parameters:
-PortID, Pin Number, address of the variable where the data will be stored */
-
-void GPIO_Read(uint8_t PortId, uint8_t pin, uint8_t *dataptr)
-{
-	static uint8_t pin_data;
-	if((PortId < PORTS_NUMBER) && (pin < PINS_NUMBER))
-	{
-		pin_data = (GPIO_READ(PortId) & (1 << pin));
-		if ((pin_data & 0xff) == (1 << pin))
-		{
-			*dataptr = 0xff;
-		}
-		if ((pin_data & 0xff) != (1 << pin))
-		{
-			*dataptr = 0x00;
 		}
 		
 	}
+	
 }
+
+
+

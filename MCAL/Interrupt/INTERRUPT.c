@@ -45,7 +45,7 @@ u8 Interrupt_EXT_INT (EXT_INTERRUPT ChannelSelect,INT_SENSE Sense_Select)
 					CLEAR_BIT(MCUCR,(u8)0x01);
 					break;
 				case FALLING_EDGE:
-					CLEAR_BIT(MCUCR,(u8)0xx0);
+					CLEAR_BIT(MCUCR,(u8)0x00);
 					SET_BIT(MCUCR,(u8)0x01);
 					break;
 				case RISING_EDGE:
@@ -81,7 +81,11 @@ u8 Interrupt_EXT_INT (EXT_INTERRUPT ChannelSelect,INT_SENSE Sense_Select)
 				default:
 					error = (u8)0x02;
 					break;
-			}		
+			}
+			case EXT_INT2:
+				break;
+			default:
+				break;	
 	}
 	return error;
 }

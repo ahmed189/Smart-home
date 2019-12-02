@@ -8,7 +8,7 @@
 // GPIO registers (PORTA)
 //
 //*****************************************************************************
-#define PORTA  *((volatile u8 * const)0x3B)
+#define PORTA  (volatile u8 * const)(0x3B)
 #define DDRA   *((volatile u8 * const)0x3A)
 #define PINA   *((volatile u8 * const)0x39)
 
@@ -17,7 +17,7 @@
 // GPIO registers (PORTB)
 //
 //*****************************************************************************
-#define PORTB  *((volatile u8 * const)0x38)
+#define PORTB  (volatile u8 * const)(0x38)
 #define DDRB   *((volatile u8 * const)0x37)
 #define PINB   *((volatile u8 * const)0x36)
 
@@ -26,7 +26,7 @@
 // GPIO registers (PORTC)
 //
 //*****************************************************************************
-#define PORTC  *((volatile u8 * const)0x35)
+#define PORTC  (volatile u8 * const)(0x35)
 #define DDRC   *((volatile u8 * const)0x34)
 #define PINC   *((volatile u8 * const)0x33)
 
@@ -35,7 +35,7 @@
 // GPIO registers (PORTD)
 //
 //*****************************************************************************
-#define PORTD  *((volatile u8 * const)0x32)
+#define PORTD  (volatile u8 * const)(0x32)
 #define DDRD   *((volatile u8 * const)0x31)
 #define PIND   *((volatile u8 * const)0x30)
 
@@ -62,18 +62,18 @@
 #define SPCR  *((volatile u8 * const)0x2D)
 
 
-#define SPR0 0
-#define SPR1 1
-#define CPHA 2
-#define CPOL 3
-#define MSTR 4
-#define DORD 5
-#define SPE  6
-#define SPIE 7
+#define SPR0 (u8)0u
+#define SPR1 (u8)1u
+#define CPHA (u8)2u
+#define CPOL (u8)3u
+#define MSTR (u8)4u
+#define DORD (u8)5u
+#define SPE  (u8)6u
+#define SPIE (u8)7u
 
-#define SPI2X 0
-#define WCOL 6
-#define SPIF 7
+#define SPI2X (u8)0u
+#define WCOL (u8)6u
+#define SPIF (u8)7u
 
 //*****************************************************************************
 //
@@ -140,6 +140,13 @@
 #define EEARL  *((volatile u8 * const)0x3E)
 #define EEDR   *((volatile u8 * const)0x3D)
 #define EECR   *((volatile u8 * const)0x3C)
+
+#define EEAR   *((volatile u16 * const)0x3E)
+
+#define EEWE	(u8)1u
+#define EEMWE	(u8)2u
+#define EERIE	(u8)3u
+
 
 //*****************************************************************************
 //

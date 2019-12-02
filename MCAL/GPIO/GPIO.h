@@ -1,8 +1,11 @@
 #ifndef GPIO_H
 #define GPIO_H
 
-#include "Typedefs.h"
-#include "GPIO_Cfg.h"
+#include "../libraries_/Typedefs.h"
+#include "../MCAL/GPIO/GPIO_Cfg.h"
+
+#define PORTS_NUMBER 4u
+#define PINS_NUMBER  8u
 
 #define INPUT  0
 #define OUTPUT 1
@@ -32,7 +35,6 @@ typedef struct
 }GPIO_CfgType;
 
 extern const GPIO_CfgType GPIO_ConfigParam [GPIO_GP_NUM];
-
 void GPIO_Init(void);
 void GPIO_Write(u8 GroupId,u8 GroupData);
 void GPIO_Read(u8 GroupId,u8* GroupDataPtr);

@@ -1,16 +1,14 @@
-#include "Typedefs.h"
-#include "Atmega32a.h"
-#include "GPIO.h"
-#include "GPIO_Cfg.h"
+#include "../MCAL/Atmega32a.h"
+#include "../MCAL/GPIO/GPIO.h"
 
-typedef volatile u8* const GPIO_Type; //type of pointer to the registers' addresses
 
-#define PORTS_NUMBER 4u
-#define PINS_NUMBER  8u
+typedef volatile u8*const GPIO_Type; //type of pointer to the registers' addresses
+
+
 
 /*Ports Base Addresses */
 
-static const uint32_t PortsBaseAddressLut[PORTS_NUMBER] =
+GPIO_Type PortsBaseAddressLut[PORTS_NUMBER] =
 {
  PORTA,
  PORTB,
@@ -25,9 +23,9 @@ static const uint32_t PortsBaseAddressLut[PORTS_NUMBER] =
 #define GPIO_WRITE(PORT_ID)  *((GPIO_Type)(GPIO_REG_ADDRESS(PORT_ID,0x00)))
 #define GPIO_READ(PORT_ID)   *((GPIO_Type)(GPIO_REG_ADDRESS(PORT_ID,0x02)))
 #define GPIO_DDR(PORT_ID)    *((GPIO_Type)(GPIO_REG_ADDRESS(PORT_ID,0x01)))
-#define SPECFUN_REG          *((GPIO_Type)(SFIOR))
+#define SPECFUN_REG          (SFIOR)
 
-static uint8_t GPIO_GP_State[GPIO_GP_NUM] = {0};
+static u8 GPIO_GP_State[GPIO_GP_NUM] = {0};
 
 /*A function to initialize all the GPIO Groups in the configurations*/
 void GPIO_Init(void)

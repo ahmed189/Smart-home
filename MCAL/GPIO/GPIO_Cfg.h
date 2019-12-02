@@ -2,4 +2,6 @@
 #define GPIO_CFG_H
 /* A configuration to the number of GPIO groups*/
 #define GPIO_GP_NUM 1u
+
+#define group_test 0u
 #endif

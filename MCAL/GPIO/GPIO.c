@@ -25,7 +25,7 @@ GPIO_Type PortsBaseAddressLut[PORTS_NUMBER] =
 #define GPIO_DDR(PORT_ID)    *((GPIO_Type)(GPIO_REG_ADDRESS(PORT_ID,0x01)))
 #define SPECFUN_REG          (SFIOR)
 
-static u8 GPIO_GP_State[GPIO_GP_NUM] = {0};
+
 
 /*A function to initialize all the GPIO Groups in the configurations*/
 void GPIO_Init(void)
@@ -33,37 +33,26 @@ void GPIO_Init(void)
 	u8 LoopIndex;
 	u8 ErrorFlag = 0;
 	const GPIO_CfgType *CfgPtr;
+	
 
-	for(LoopIndex = 0; (LoopIndex <GPIO_GP_NUM) && (ErrorFlag == 0); LoopIndex++)
+	/*loop through groups*/
+	for(LoopIndex = 0 ; (LoopIndex < GPIO_GP_NUM && ErrorFlag == 0) ; LoopIndex++)
 	{
-		if((GPIO_ConfigParam[LoopIndex].PortID < PORTS_NUMBER) && (GPIO_ConfigParam[LoopIndex].Pin < PINS_NUMBER))
+		if(GPIO_ConfigParam[LoopIndex].PortID < PORTS_NUMBER)
 		{
 			CfgPtr = &GPIO_ConfigParam[LoopIndex];
-			/*Unlock the group*/
-	
-			if (CfgPtr->PinMode == INPUT)
-			{
-				GPIO_DDR(CfgPtr->PortID) &= ~((1 << CfgPtr->Pin) & 0xff);
-
-				if (CfgPtr->PullupON_OFF == PULLUP_ON)
-				{
-					GPIO_WRITE(CfgPtr->PortID) |= ((1 << CfgPtr->Pin) & 0xff);
-					SPECFUN_REG &= ~(1 << 2);
-				}
-
-				if (CfgPtr->PullupON_OFF == PULLUP_OFF)
-				{
-					GPIO_WRITE(CfgPtr->PortID) &= ~((1 << CfgPtr->Pin) & 0xff);
-					SPECFUN_REG |= (1 << 2);
-				}
-
-			}
-			if (CfgPtr->PinMode == OUTPUT)
-			{
-				GPIO_DDR(CfgPtr->PortID) |= ((1 << CfgPtr->Pin) & 0xff);
-			}
 			
-			GPIO_GP_State[LoopIndex] = 1;
+			/*initializing the port to make all bits Anded with the mask*/
+			GPIO_DDR(CfgPtr->PortID) &=~(CfgPtr->Mask);
+			
+			/*Put the group direction in it's register*/
+			GPIO_DDR(CfgPtr->PortID) |= (CfgPtr->Direction)&(CfgPtr->Mask);
+
+			/*initializing the port to make all bits Anded with the mask*/
+			GPIO_WRITE(CfgPtr->PortID)&=~(CfgPtr->Mask);
+			
+			/*Put the group Pull up data in it's register*/
+			GPIO_WRITE(CfgPtr->PortID)|=~(CfgPtr->Direction)&(CfgPtr->Mask)&(CfgPtr->PullupON_OFF);
 		}
 		else
 		{
@@ -76,23 +65,27 @@ void GPIO_Init(void)
 void GPIO_Write(u8 GroupId,u8 GroupData)
 {
 	const GPIO_CfgType *CfgWrite;
-
-	if (( GroupId < GPIO_GP_NUM))
+	//u8 ErrorFlag = 0;
+	
+	if ( GroupId < GPIO_GP_NUM )
 	{
 		CfgWrite = &GPIO_ConfigParam[GroupId];
 		
-		if ((CfgWrite->PinMode == OUTPUT) && (GPIO_GP_State[GroupId] == 1))
-		{
-			if (GroupData == LOW)
-			{
-				GPIO_WRITE(CfgWrite->PortID) &= ~((1 << CfgWrite->Pin) & 0xff);
-			}
-			if (GroupData == HIGH)
-			{
-				GPIO_WRITE(CfgWrite->PortID) |= ((1 << CfgWrite->Pin) & 0xff);
-			}
-	    }
-
+		/*save the value or port in another variable to work on it regards the original port*/
+		u8 portcopy = GPIO_WRITE(CfgWrite->PortID);
+		
+		/*initializing the port to make all bits Anded with the mask*/
+		portcopy &=~(CfgWrite->Mask);
+		
+		/*save the data in the variable*/
+		portcopy |= GroupData & CfgWrite->Mask & CfgWrite->Direction;
+		
+		/*save data in original register*/
+		GPIO_WRITE(CfgWrite->PortID) = portcopy;
+	}
+	else
+	{
+		//ErrorFlag = 1;
 	}
 }
 
@@ -103,25 +96,18 @@ void GPIO_Write(u8 GroupId,u8 GroupData)
 void GPIO_Read(u8 GroupId,u8* GroupDataPtr)
 {
 	const GPIO_CfgType * CfgRead;
-	if (( GroupId < GPIO_GP_NUM))
+	if (( GroupId < GPIO_GP_NUM ))
 	{
 
 		CfgRead =  &GPIO_ConfigParam[GroupId];
-
-		if((CfgRead->PinMode == INPUT) && (GPIO_GP_State[GroupId] == 1))
+		
+		/*check if direction is input*/
+		if(CfgRead->Direction == INPUT)
 		{
-
-			*GroupDataPtr = (GPIO_READ(CfgRead->PortID) & (1 << CfgRead->Pin));
-			if ((*GroupDataPtr & 0xff) == (1 << CfgRead->Pin))
-			{
-				*GroupDataPtr = 0xff;
-			}
-			if ((*GroupDataPtr & 0xff) != (1 << CfgRead->Pin))
-			{
-				*GroupDataPtr = 0x00;
-			}
-
+			/*get the data from the pin register*/
+			*GroupDataPtr = GPIO_READ(CfgRead->PortID) & CfgRead->Mask;
 		}
+		else;
 		
 	}
 	

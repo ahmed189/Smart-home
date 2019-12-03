@@ -27,8 +27,8 @@
 typedef struct
 {
 	u8 PortID;
-	u8 Pin;
-	u8 PinMode;
+	u8 Mask;
+	u8 Direction;
 	u8 PullupON_OFF;
 	u8 D_A;
 	

@@ -3,31 +3,29 @@ Smart_home.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000226  00000000  00000000  00000094  2**1
+  0 .text         0000015a  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         0000000e  00800060  00000226  000002ba  2**0
+  1 .data         0000000e  00800060  0000015a  000001ce  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000001  0080006e  0080006e  000002c8  2**0
-                  ALLOC
-  3 .comment      00000030  00000000  00000000  000002c8  2**0
+  2 .comment      00000030  00000000  00000000  000001dc  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000002f8  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000020c  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000068  00000000  00000000  00000334  2**0
+  4 .debug_aranges 00000068  00000000  00000000  00000248  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000952  00000000  00000000  0000039c  2**0
+  5 .debug_info   0000094b  00000000  00000000  000002b0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 0000076c  00000000  00000000  00000cee  2**0
+  6 .debug_abbrev 00000780  00000000  00000000  00000bfb  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   0000044a  00000000  00000000  0000145a  2**0
+  7 .debug_line   000003e6  00000000  00000000  0000137b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000068  00000000  00000000  000018a4  2**2
+  8 .debug_frame  00000074  00000000  00000000  00001764  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000450  00000000  00000000  0000190c  2**0
+  9 .debug_str    00000452  00000000  00000000  000017d8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000009e  00000000  00000000  00001d5c  2**0
+ 10 .debug_loc    0000010c  00000000  00000000  00001c2a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000030  00000000  00000000  00001dfa  2**0
+ 11 .debug_ranges 00000030  00000000  00000000  00001d36  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -67,8 +65,8 @@ Disassembly of section .text:
   60:	10 e0       	ldi	r17, 0x00	; 0
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	e6 e2       	ldi	r30, 0x26	; 38
-  68:	f2 e0       	ldi	r31, 0x02	; 2
+  66:	ea e5       	ldi	r30, 0x5A	; 90
+  68:	f1 e0       	ldi	r31, 0x01	; 1
   6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
   6c:	05 90       	lpm	r0, Z+
   6e:	0d 92       	st	X+, r0
@@ -86,11 +84,11 @@ Disassembly of section .text:
   7e:	1d 92       	st	X+, r1
 
 00000080 <.do_clear_bss_start>:
-  80:	af 36       	cpi	r26, 0x6F	; 111
+  80:	ae 36       	cpi	r26, 0x6E	; 110
   82:	b2 07       	cpc	r27, r18
   84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
   86:	0e 94 49 00 	call	0x92	; 0x92 <main>
-  8a:	0c 94 11 01 	jmp	0x222	; 0x222 <_exit>
+  8a:	0c 94 ab 00 	jmp	0x156	; 0x156 <_exit>
 
 0000008e <__bad_interrupt>:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -103,36 +101,38 @@ int main(void)
 {
 	GPIO_Init();
   92:	0e 94 66 00 	call	0xcc	; 0xcc <GPIO_Init>
-	
     while (1) 
     {
+		//i =0;
+		//for(i = 0 ; i  < 4 ;i++)
+		//	*PORTB = Get_num_Keypad();
 		GPIO_Write(group_test,0x00);
   96:	60 e0       	ldi	r22, 0x00	; 0
   98:	80 e0       	ldi	r24, 0x00	; 0
-  9a:	0e 94 d2 00 	call	0x1a4	; 0x1a4 <GPIO_Write>
+  9a:	0e 94 90 00 	call	0x120	; 0x120 <GPIO_Write>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  9e:	2f e3       	ldi	r18, 0x3F	; 63
-  a0:	8d e0       	ldi	r24, 0x0D	; 13
-  a2:	93 e0       	ldi	r25, 0x03	; 3
+  9e:	2f e9       	ldi	r18, 0x9F	; 159
+  a0:	86 e8       	ldi	r24, 0x86	; 134
+  a2:	91 e0       	ldi	r25, 0x01	; 1
   a4:	21 50       	subi	r18, 0x01	; 1
   a6:	80 40       	sbci	r24, 0x00	; 0
   a8:	90 40       	sbci	r25, 0x00	; 0
   aa:	e1 f7       	brne	.-8      	; 0xa4 <main+0x12>
   ac:	00 c0       	rjmp	.+0      	; 0xae <main+0x1c>
   ae:	00 00       	nop
-		_delay_ms(1000);
-		GPIO_Write(group_test,0xff);
-  b0:	6f ef       	ldi	r22, 0xFF	; 255
+		_delay_ms(500);
+		GPIO_Write(group_test,0x0f);
+  b0:	6f e0       	ldi	r22, 0x0F	; 15
   b2:	80 e0       	ldi	r24, 0x00	; 0
-  b4:	0e 94 d2 00 	call	0x1a4	; 0x1a4 <GPIO_Write>
-  b8:	2f e3       	ldi	r18, 0x3F	; 63
-  ba:	8d e0       	ldi	r24, 0x0D	; 13
-  bc:	93 e0       	ldi	r25, 0x03	; 3
+  b4:	0e 94 90 00 	call	0x120	; 0x120 <GPIO_Write>
+  b8:	2f e9       	ldi	r18, 0x9F	; 159
+  ba:	86 e8       	ldi	r24, 0x86	; 134
+  bc:	91 e0       	ldi	r25, 0x01	; 1
   be:	21 50       	subi	r18, 0x01	; 1
   c0:	80 40       	sbci	r24, 0x00	; 0
   c2:	90 40       	sbci	r25, 0x00	; 0
@@ -142,224 +142,131 @@ int main(void)
   ca:	e5 cf       	rjmp	.-54     	; 0x96 <main+0x4>
 
 000000cc <GPIO_Init>:
-	u8 ErrorFlag = 0;
-	const GPIO_CfgType *CfgPtr;
 
-	for(LoopIndex = 0; (LoopIndex <GPIO_GP_NUM) && (ErrorFlag == 0); LoopIndex++)
+
+
+/*A function to initialize all the GPIO Groups in the configurations*/
+void GPIO_Init(void)
+{
+  cc:	cf 93       	push	r28
+  ce:	df 93       	push	r29
+	
+
+	/*loop through groups*/
+	for(LoopIndex = 0 ; (LoopIndex < GPIO_GP_NUM && ErrorFlag == 0) ; LoopIndex++)
 	{
-		if((GPIO_ConfigParam[LoopIndex].PortID < PORTS_NUMBER) && (GPIO_ConfigParam[LoopIndex].Pin < PINS_NUMBER))
-  cc:	e0 91 68 00 	lds	r30, 0x0068	; 0x800068 <GPIO_ConfigParam>
-  d0:	e4 30       	cpi	r30, 0x04	; 4
-  d2:	08 f0       	brcs	.+2      	; 0xd6 <GPIO_Init+0xa>
-  d4:	66 c0       	rjmp	.+204    	; 0x1a2 <GPIO_Init+0xd6>
-  d6:	80 91 69 00 	lds	r24, 0x0069	; 0x800069 <GPIO_ConfigParam+0x1>
-  da:	88 30       	cpi	r24, 0x08	; 8
-  dc:	08 f0       	brcs	.+2      	; 0xe0 <GPIO_Init+0x14>
-  de:	61 c0       	rjmp	.+194    	; 0x1a2 <GPIO_Init+0xd6>
+		if(GPIO_ConfigParam[LoopIndex].PortID < PORTS_NUMBER)
+  d0:	e0 91 68 00 	lds	r30, 0x0068	; 0x800068 <GPIO_ConfigParam>
+  d4:	e4 30       	cpi	r30, 0x04	; 4
+  d6:	08 f5       	brcc	.+66     	; 0x11a <GPIO_Init+0x4e>
 		{
 			CfgPtr = &GPIO_ConfigParam[LoopIndex];
-			/*Unlock the group*/
-	
-			if (CfgPtr->PinMode == INPUT)
-  e0:	90 91 6a 00 	lds	r25, 0x006A	; 0x80006a <GPIO_ConfigParam+0x2>
-  e4:	91 11       	cpse	r25, r1
-  e6:	3f c0       	rjmp	.+126    	; 0x166 <GPIO_Init+0x9a>
-			{
-				GPIO_DDR(CfgPtr->PortID) &= ~((1 << CfgPtr->Pin) & 0xff);
-  e8:	f0 e0       	ldi	r31, 0x00	; 0
-  ea:	ee 0f       	add	r30, r30
-  ec:	ff 1f       	adc	r31, r31
-  ee:	e0 5a       	subi	r30, 0xA0	; 160
-  f0:	ff 4f       	sbci	r31, 0xFF	; 255
-  f2:	a0 81       	ld	r26, Z
-  f4:	b1 81       	ldd	r27, Z+1	; 0x01
-  f6:	fd 01       	movw	r30, r26
-  f8:	42 91       	ld	r20, -Z
-  fa:	21 e0       	ldi	r18, 0x01	; 1
-  fc:	30 e0       	ldi	r19, 0x00	; 0
-  fe:	b9 01       	movw	r22, r18
- 100:	02 c0       	rjmp	.+4      	; 0x106 <GPIO_Init+0x3a>
- 102:	66 0f       	add	r22, r22
- 104:	77 1f       	adc	r23, r23
- 106:	8a 95       	dec	r24
- 108:	e2 f7       	brpl	.-8      	; 0x102 <GPIO_Init+0x36>
- 10a:	cb 01       	movw	r24, r22
- 10c:	26 2f       	mov	r18, r22
- 10e:	20 95       	com	r18
- 110:	24 23       	and	r18, r20
- 112:	20 83       	st	Z, r18
-
-				if (CfgPtr->PullupON_OFF == PULLUP_ON)
- 114:	20 91 6b 00 	lds	r18, 0x006B	; 0x80006b <GPIO_ConfigParam+0x3>
- 118:	21 11       	cpse	r18, r1
- 11a:	06 c0       	rjmp	.+12     	; 0x128 <GPIO_Init+0x5c>
-				{
-					GPIO_WRITE(CfgPtr->PortID) |= ((1 << CfgPtr->Pin) & 0xff);
- 11c:	9c 91       	ld	r25, X
- 11e:	89 2b       	or	r24, r25
- 120:	8c 93       	st	X, r24
-					SPECFUN_REG &= ~(1 << 2);
- 122:	80 b7       	in	r24, 0x30	; 48
- 124:	8b 7f       	andi	r24, 0xFB	; 251
- 126:	80 bf       	out	0x30, r24	; 48
-				}
-
-				if (CfgPtr->PullupON_OFF == PULLUP_OFF)
- 128:	80 91 6b 00 	lds	r24, 0x006B	; 0x80006b <GPIO_ConfigParam+0x3>
- 12c:	81 30       	cpi	r24, 0x01	; 1
- 12e:	d9 f4       	brne	.+54     	; 0x166 <GPIO_Init+0x9a>
-				{
-					GPIO_WRITE(CfgPtr->PortID) &= ~((1 << CfgPtr->Pin) & 0xff);
- 130:	a8 e6       	ldi	r26, 0x68	; 104
- 132:	b0 e0       	ldi	r27, 0x00	; 0
- 134:	ec 91       	ld	r30, X
- 136:	f0 e0       	ldi	r31, 0x00	; 0
- 138:	ee 0f       	add	r30, r30
- 13a:	ff 1f       	adc	r31, r31
- 13c:	e0 5a       	subi	r30, 0xA0	; 160
- 13e:	ff 4f       	sbci	r31, 0xFF	; 255
- 140:	01 90       	ld	r0, Z+
- 142:	f0 81       	ld	r31, Z
- 144:	e0 2d       	mov	r30, r0
- 146:	20 81       	ld	r18, Z
- 148:	81 e0       	ldi	r24, 0x01	; 1
- 14a:	90 e0       	ldi	r25, 0x00	; 0
- 14c:	11 96       	adiw	r26, 0x01	; 1
- 14e:	0c 90       	ld	r0, X
- 150:	02 c0       	rjmp	.+4      	; 0x156 <GPIO_Init+0x8a>
- 152:	88 0f       	add	r24, r24
- 154:	99 1f       	adc	r25, r25
- 156:	0a 94       	dec	r0
- 158:	e2 f7       	brpl	.-8      	; 0x152 <GPIO_Init+0x86>
- 15a:	80 95       	com	r24
- 15c:	82 23       	and	r24, r18
- 15e:	80 83       	st	Z, r24
-					SPECFUN_REG |= (1 << 2);
- 160:	80 b7       	in	r24, 0x30	; 48
- 162:	84 60       	ori	r24, 0x04	; 4
- 164:	80 bf       	out	0x30, r24	; 48
-				}
-
-			}
-			if (CfgPtr->PinMode == OUTPUT)
- 166:	80 91 6a 00 	lds	r24, 0x006A	; 0x80006a <GPIO_ConfigParam+0x2>
- 16a:	81 30       	cpi	r24, 0x01	; 1
- 16c:	b9 f4       	brne	.+46     	; 0x19c <GPIO_Init+0xd0>
-			{
-				GPIO_DDR(CfgPtr->PortID) |= ((1 << CfgPtr->Pin) & 0xff);
- 16e:	a8 e6       	ldi	r26, 0x68	; 104
- 170:	b0 e0       	ldi	r27, 0x00	; 0
- 172:	ec 91       	ld	r30, X
- 174:	f0 e0       	ldi	r31, 0x00	; 0
- 176:	ee 0f       	add	r30, r30
- 178:	ff 1f       	adc	r31, r31
- 17a:	e0 5a       	subi	r30, 0xA0	; 160
- 17c:	ff 4f       	sbci	r31, 0xFF	; 255
- 17e:	01 90       	ld	r0, Z+
- 180:	f0 81       	ld	r31, Z
- 182:	e0 2d       	mov	r30, r0
- 184:	22 91       	ld	r18, -Z
- 186:	81 e0       	ldi	r24, 0x01	; 1
- 188:	90 e0       	ldi	r25, 0x00	; 0
- 18a:	11 96       	adiw	r26, 0x01	; 1
- 18c:	0c 90       	ld	r0, X
- 18e:	02 c0       	rjmp	.+4      	; 0x194 <GPIO_Init+0xc8>
- 190:	88 0f       	add	r24, r24
- 192:	99 1f       	adc	r25, r25
- 194:	0a 94       	dec	r0
- 196:	e2 f7       	brpl	.-8      	; 0x190 <GPIO_Init+0xc4>
- 198:	82 2b       	or	r24, r18
- 19a:	80 83       	st	Z, r24
-			}
 			
-			GPIO_GP_State[LoopIndex] = 1;
- 19c:	81 e0       	ldi	r24, 0x01	; 1
- 19e:	80 93 6e 00 	sts	0x006E, r24	; 0x80006e <__data_end>
- 1a2:	08 95       	ret
+			/*initializing the port to make all bits Anded with the mask*/
+			GPIO_DDR(CfgPtr->PortID) &=~(CfgPtr->Mask);
+  d8:	f0 e0       	ldi	r31, 0x00	; 0
+  da:	ee 0f       	add	r30, r30
+  dc:	ff 1f       	adc	r31, r31
+  de:	e0 5a       	subi	r30, 0xA0	; 160
+  e0:	ff 4f       	sbci	r31, 0xFF	; 255
+  e2:	01 90       	ld	r0, Z+
+  e4:	f0 81       	ld	r31, Z
+  e6:	e0 2d       	mov	r30, r0
+  e8:	df 01       	movw	r26, r30
+  ea:	8e 91       	ld	r24, -X
+  ec:	c8 e6       	ldi	r28, 0x68	; 104
+  ee:	d0 e0       	ldi	r29, 0x00	; 0
+  f0:	39 81       	ldd	r19, Y+1	; 0x01
+  f2:	93 2f       	mov	r25, r19
+  f4:	90 95       	com	r25
+  f6:	89 23       	and	r24, r25
+  f8:	8c 93       	st	X, r24
+			
+			/*Put the group direction in it's register*/
+			GPIO_DDR(CfgPtr->PortID) |= (CfgPtr->Direction)&(CfgPtr->Mask);
+  fa:	2c 91       	ld	r18, X
+  fc:	8a 81       	ldd	r24, Y+2	; 0x02
+  fe:	43 2f       	mov	r20, r19
+ 100:	48 23       	and	r20, r24
+ 102:	24 2b       	or	r18, r20
+ 104:	2c 93       	st	X, r18
 
-000001a4 <GPIO_Write>:
-/*A function to Digital Write data to a specific group*/
+			/*initializing the port to make all bits Anded with the mask*/
+			GPIO_WRITE(CfgPtr->PortID)&=~(CfgPtr->Mask);
+ 106:	20 81       	ld	r18, Z
+ 108:	92 23       	and	r25, r18
+ 10a:	90 83       	st	Z, r25
+			
+			/*Put the group Pull up data in it's register*/
+			GPIO_WRITE(CfgPtr->PortID)|=~(CfgPtr->Direction)&(CfgPtr->Mask)&(CfgPtr->PullupON_OFF);
+ 10c:	90 81       	ld	r25, Z
+ 10e:	2b 81       	ldd	r18, Y+3	; 0x03
+ 110:	23 23       	and	r18, r19
+ 112:	80 95       	com	r24
+ 114:	82 23       	and	r24, r18
+ 116:	89 2b       	or	r24, r25
+ 118:	80 83       	st	Z, r24
+		else
+		{
+			ErrorFlag = 1;
+		}
+	}
+}
+ 11a:	df 91       	pop	r29
+ 11c:	cf 91       	pop	r28
+ 11e:	08 95       	ret
+
+00000120 <GPIO_Write>:
 void GPIO_Write(u8 GroupId,u8 GroupData)
 {
 	const GPIO_CfgType *CfgWrite;
-
-	if (( GroupId < GPIO_GP_NUM))
- 1a4:	81 11       	cpse	r24, r1
- 1a6:	3c c0       	rjmp	.+120    	; 0x220 <GPIO_Write+0x7c>
+	//u8 ErrorFlag = 0;
+	
+	if ( GroupId < GPIO_GP_NUM )
+ 120:	81 11       	cpse	r24, r1
+ 122:	18 c0       	rjmp	.+48     	; 0x154 <GPIO_Write+0x34>
 	{
 		CfgWrite = &GPIO_ConfigParam[GroupId];
 		
-		if ((CfgWrite->PinMode == OUTPUT) && (GPIO_GP_State[GroupId] == 1))
- 1a8:	80 91 6a 00 	lds	r24, 0x006A	; 0x80006a <GPIO_ConfigParam+0x2>
- 1ac:	81 30       	cpi	r24, 0x01	; 1
- 1ae:	c1 f5       	brne	.+112    	; 0x220 <GPIO_Write+0x7c>
- 1b0:	80 91 6e 00 	lds	r24, 0x006E	; 0x80006e <__data_end>
- 1b4:	81 30       	cpi	r24, 0x01	; 1
- 1b6:	a1 f5       	brne	.+104    	; 0x220 <GPIO_Write+0x7c>
-		{
-			if (GroupData == LOW)
- 1b8:	61 11       	cpse	r22, r1
- 1ba:	19 c0       	rjmp	.+50     	; 0x1ee <GPIO_Write+0x4a>
-			{
-				GPIO_WRITE(CfgWrite->PortID) &= ~((1 << CfgWrite->Pin) & 0xff);
- 1bc:	a8 e6       	ldi	r26, 0x68	; 104
- 1be:	b0 e0       	ldi	r27, 0x00	; 0
- 1c0:	ec 91       	ld	r30, X
- 1c2:	f0 e0       	ldi	r31, 0x00	; 0
- 1c4:	ee 0f       	add	r30, r30
- 1c6:	ff 1f       	adc	r31, r31
- 1c8:	e0 5a       	subi	r30, 0xA0	; 160
- 1ca:	ff 4f       	sbci	r31, 0xFF	; 255
- 1cc:	01 90       	ld	r0, Z+
- 1ce:	f0 81       	ld	r31, Z
- 1d0:	e0 2d       	mov	r30, r0
- 1d2:	20 81       	ld	r18, Z
- 1d4:	81 e0       	ldi	r24, 0x01	; 1
- 1d6:	90 e0       	ldi	r25, 0x00	; 0
- 1d8:	11 96       	adiw	r26, 0x01	; 1
- 1da:	0c 90       	ld	r0, X
- 1dc:	02 c0       	rjmp	.+4      	; 0x1e2 <GPIO_Write+0x3e>
- 1de:	88 0f       	add	r24, r24
- 1e0:	99 1f       	adc	r25, r25
- 1e2:	0a 94       	dec	r0
- 1e4:	e2 f7       	brpl	.-8      	; 0x1de <GPIO_Write+0x3a>
- 1e6:	80 95       	com	r24
- 1e8:	82 23       	and	r24, r18
- 1ea:	80 83       	st	Z, r24
- 1ec:	08 95       	ret
-			}
-			if (GroupData == HIGH)
- 1ee:	6f 3f       	cpi	r22, 0xFF	; 255
- 1f0:	b9 f4       	brne	.+46     	; 0x220 <GPIO_Write+0x7c>
-			{
-				GPIO_WRITE(CfgWrite->PortID) |= ((1 << CfgWrite->Pin) & 0xff);
- 1f2:	a8 e6       	ldi	r26, 0x68	; 104
- 1f4:	b0 e0       	ldi	r27, 0x00	; 0
- 1f6:	ec 91       	ld	r30, X
- 1f8:	f0 e0       	ldi	r31, 0x00	; 0
- 1fa:	ee 0f       	add	r30, r30
- 1fc:	ff 1f       	adc	r31, r31
- 1fe:	e0 5a       	subi	r30, 0xA0	; 160
- 200:	ff 4f       	sbci	r31, 0xFF	; 255
- 202:	01 90       	ld	r0, Z+
- 204:	f0 81       	ld	r31, Z
- 206:	e0 2d       	mov	r30, r0
- 208:	20 81       	ld	r18, Z
- 20a:	81 e0       	ldi	r24, 0x01	; 1
- 20c:	90 e0       	ldi	r25, 0x00	; 0
- 20e:	11 96       	adiw	r26, 0x01	; 1
- 210:	0c 90       	ld	r0, X
- 212:	02 c0       	rjmp	.+4      	; 0x218 <GPIO_Write+0x74>
- 214:	88 0f       	add	r24, r24
- 216:	99 1f       	adc	r25, r25
- 218:	0a 94       	dec	r0
- 21a:	e2 f7       	brpl	.-8      	; 0x214 <GPIO_Write+0x70>
- 21c:	82 2b       	or	r24, r18
- 21e:	80 83       	st	Z, r24
- 220:	08 95       	ret
+		/*save the value or port in another variable to work on it regards the original port*/
+		u8 portcopy = GPIO_WRITE(CfgWrite->PortID);
+ 124:	a8 e6       	ldi	r26, 0x68	; 104
+ 126:	b0 e0       	ldi	r27, 0x00	; 0
+ 128:	ec 91       	ld	r30, X
+ 12a:	f0 e0       	ldi	r31, 0x00	; 0
+ 12c:	ee 0f       	add	r30, r30
+ 12e:	ff 1f       	adc	r31, r31
+ 130:	e0 5a       	subi	r30, 0xA0	; 160
+ 132:	ff 4f       	sbci	r31, 0xFF	; 255
+ 134:	01 90       	ld	r0, Z+
+ 136:	f0 81       	ld	r31, Z
+ 138:	e0 2d       	mov	r30, r0
+ 13a:	80 81       	ld	r24, Z
+		
+		/*initializing the port to make all bits Anded with the mask*/
+		portcopy &=~(CfgWrite->Mask);
+ 13c:	11 96       	adiw	r26, 0x01	; 1
+ 13e:	2c 91       	ld	r18, X
+ 140:	11 97       	sbiw	r26, 0x01	; 1
+ 142:	92 2f       	mov	r25, r18
+ 144:	90 95       	com	r25
+ 146:	89 23       	and	r24, r25
+		
+		/*save the data in the variable*/
+		portcopy |= GroupData & CfgWrite->Mask & CfgWrite->Direction;
+ 148:	12 96       	adiw	r26, 0x02	; 2
+ 14a:	9c 91       	ld	r25, X
+ 14c:	92 23       	and	r25, r18
+ 14e:	69 23       	and	r22, r25
+ 150:	68 2b       	or	r22, r24
+		
+		/*save data in original register*/
+		GPIO_WRITE(CfgWrite->PortID) = portcopy;
+ 152:	60 83       	st	Z, r22
+ 154:	08 95       	ret
 
-00000222 <_exit>:
- 222:	f8 94       	cli
+00000156 <_exit>:
+ 156:	f8 94       	cli
 
-00000224 <__stop_program>:
- 224:	ff cf       	rjmp	.-2      	; 0x224 <__stop_program>
+00000158 <__stop_program>:
+ 158:	ff cf       	rjmp	.-2      	; 0x158 <__stop_program>
